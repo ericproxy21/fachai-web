@@ -10,7 +10,7 @@ function App() {
         This is a Tailwind CSS styled component.
       </div> */}
       <header className="App-header">
-        <div className="h-24">
+        <div>
           <img src={logo} alt="logo" className="App-logo" />
         </div>
         <div className="w-full">
