@@ -18,7 +18,7 @@ function App() {
             Doctor-Patient Conversation Practice
           </h1>
         </div>
-        <div className="flex-grow pt-8 h-96 w-full inline-block px-8">
+        <div className="flex-grow pt-8 h-96 w-full inline-block px-8 pb-10">
           <Chatbox></Chatbox>
         </div>
       </header>
