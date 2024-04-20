@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { chat } from "../api/fachai";
+import { speakText } from "../tools/speechToText";
 import { ROLE, Message } from "../Types/common";
 
 const Chatbox: React.FC = () => {
@@ -8,6 +9,7 @@ const Chatbox: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [recording, setRecording] = useState<boolean>(false);
   const [speaking, setSpeaking] = useState<boolean>(false);
+
   const historyRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +30,7 @@ const Chatbox: React.FC = () => {
     console.log("Fetch Response...");
     if (inputValue.trim().length > 0) {
       const msg = inputValue.trim();
+
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: ROLE.User, content: msg },
@@ -36,20 +39,47 @@ const Chatbox: React.FC = () => {
 
       chat(msg).then((res: string) => {
         console.log("chatgpt API call result: ", res);
-        setLoading(false);
+
         if (res) {
+          // To cancel the timer and reset it
+          speakText(res);
+          // window.speechSynthesis.cancel();
+          // myTimeout = setTimeout(myTimer, 10000);
+
+          // const toSpeak: string = res;
+          // const utt: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(
+          //   toSpeak
+          // );
+
+          // utt.onend = (): void => {
+          //   clearTimeout(myTimeout);
+          // };
+          // utt.voice = germanVoice;
+          // utt.rate = 1.2;
+
+          // window.speechSynthesis.speak(utt);
+
           setMessages((prevMessages) => [
             ...prevMessages,
             { role: ROLE.Assistant, content: res },
           ]);
           setInputValue("");
+
           //startTextToSpeech(res.data[res.data.length - 1].content);
         } else {
           //Alert.alert('Error', res.data as unknown as string);
         }
+
+        setLoading(false);
       });
     }
   };
+
+  const startSpeaking = () => {};
+  const stopSpeaking = () => {};
+  const startRecording = () => {};
+  const stopRecording = () => {};
+  const clearMessageHistory = () => {};
 
   // Scroll to the bottom of the chat history when messages change
   useEffect(() => {
@@ -81,6 +111,17 @@ const Chatbox: React.FC = () => {
             </div>
           );
         })}
+        <div>
+          {loading ? (
+            <img
+              src={require("../assets/loading.gif")}
+              className="rounded-full w-10 h-10"
+              alt="loading"
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <div className="flex items-center pt-2">
         <input
@@ -97,6 +138,42 @@ const Chatbox: React.FC = () => {
         >
           Send
         </button>
+      </div>
+      <div className="flex items-center pt-2">
+        {recording ? (
+          <button onClick={stopRecording}>
+            <img
+              className="rounded-full w-10 h-10"
+              src={require("../assets/voiceLoading.gif")}
+              alt="voiceLoading"
+            />
+          </button>
+        ) : (
+          <button onClick={startRecording}>
+            <img
+              className="rounded-full w-10 h-10"
+              src={require("../assets/recordingIcon.png")}
+              alt="recordingIcon"
+            />
+          </button>
+        )}
+
+        {messages.length > 0 && (
+          <button
+            onClick={clearMessageHistory}
+            className="bg-neutral-400 rounded-3xl p-2 w-10 h-10"
+          >
+            <span className="text-white font-semibold text-sm">Clear</span>
+          </button>
+        )}
+        {messages.length > 0 && (
+          <button
+            onClick={stopSpeaking}
+            className="bg-red-400 rounded-3xl p-2  w-10 h-10"
+          >
+            <span className="text-white font-semibold text-sm">Stop</span>
+          </button>
+        )}
       </div>
     </div>
   );
