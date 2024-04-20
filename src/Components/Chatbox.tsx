@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { chat } from "../api/fachai";
 import { speakText } from "../tools/speechToText";
 import { ROLE, Message } from "../Types/common";
+import SpeedAdjuster from "./SpeedAdjuster";
 
 const Chatbox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -9,7 +10,7 @@ const Chatbox: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [recording, setRecording] = useState<boolean>(false);
   const [speaking, setSpeaking] = useState<boolean>(false);
-
+  const [speed, setSpeed] = useState(1.2);
   const historyRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,7 @@ const Chatbox: React.FC = () => {
 
         if (res) {
           // To cancel the timer and reset it
-          speakText(res);
+          speakText(res, speed);
           // window.speechSynthesis.cancel();
           // myTimeout = setTimeout(myTimer, 10000);
 
@@ -80,6 +81,9 @@ const Chatbox: React.FC = () => {
   const startRecording = () => {};
   const stopRecording = () => {};
   const clearMessageHistory = () => {};
+  const evaluateSession = () => {
+    clearMessageHistory();
+  };
 
   // Scroll to the bottom of the chat history when messages change
   useEffect(() => {
@@ -87,6 +91,10 @@ const Chatbox: React.FC = () => {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const handleSpeedChange = (newSpeed: number) => {
+    setSpeed(newSpeed);
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -139,41 +147,52 @@ const Chatbox: React.FC = () => {
           Send
         </button>
       </div>
-      <div className="flex items-center pt-2">
-        {recording ? (
-          <button onClick={stopRecording}>
-            <img
-              className="rounded-full w-10 h-10"
-              src={require("../assets/voiceLoading.gif")}
-              alt="voiceLoading"
-            />
-          </button>
-        ) : (
-          <button onClick={startRecording}>
-            <img
-              className="rounded-full w-10 h-10"
-              src={require("../assets/recordingIcon.png")}
-              alt="recordingIcon"
-            />
-          </button>
-        )}
 
-        {messages.length > 0 && (
-          <button
-            onClick={clearMessageHistory}
-            className="bg-neutral-400 rounded-3xl p-2 w-10 h-10"
-          >
-            <span className="text-white font-semibold text-sm">Clear</span>
-          </button>
-        )}
-        {messages.length > 0 && (
+      <div className="flex items-center pt-2 justify-between">
+        <div className="flex ml-0">
+          <SpeedAdjuster
+            speed={speed}
+            onSpeedChange={handleSpeedChange}
+            disabled={loading}
+          />
+
           <button
             onClick={stopSpeaking}
-            className="bg-red-400 rounded-3xl p-2  w-10 h-10"
+            disabled={messages.length === 0}
+            className="ml-5"
           >
-            <span className="text-white font-semibold text-sm">Stop</span>
+            <span role="img" aria-label="Stop Sign">
+              ⏸️
+            </span>
           </button>
-        )}
+        </div>
+
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          {recording ? (
+            <button onClick={stopRecording}>
+              <img
+                className="rounded-full w-10 h-10"
+                src={require("../assets/voiceLoading.gif")}
+                alt="voiceLoading"
+              />
+            </button>
+          ) : (
+            <button onClick={startRecording}>
+              <img
+                className="rounded-full w-10 h-10"
+                src={require("../assets/recordingIcon.png")}
+                alt="recordingIcon"
+              />
+            </button>
+          )}
+        </div>
+
+        <button
+          onClick={evaluateSession}
+          className="ml-1 bg-green-500 text-white px-4 py-2 rounded-md text-sm"
+        >
+          Evaluate
+        </button>
       </div>
     </div>
   );

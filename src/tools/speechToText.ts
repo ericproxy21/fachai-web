@@ -1,72 +1,3 @@
-// function makeChunksOfText(text: string): string[] {
-//   const maxLength: number = 190;
-//   let speechChunks: string[] = [];
-
-//   // Regular expression to match punctuation marks (comma and period)
-//   const punctuationRegex = /[,.]/;
-
-//   // Split the text into chunks of maximum length maxLength using punctuation marks
-//   while (text.length > 0) {
-//       if (text.length <= maxLength) {
-//           speechChunks.push(text);
-//           break;
-//       }
-
-//       let chunk: string = text.substring(0, maxLength + 1);
-
-//       // Find the last punctuation mark in the chunk
-//       let lastPunctuationIndex: number = chunk.search(punctuationRegex);
-
-//       if (lastPunctuationIndex !== -1) {
-//           // Include the punctuation mark in the current chunk
-//           speechChunks.push(text.substring(0, lastPunctuationIndex + 1));
-//           text = text.substring(lastPunctuationIndex + 1).trim();
-//       } else {
-//           // If there are no punctuation marks in the chunk, split at the maxLength
-//           speechChunks.push(text.substring(0, maxLength));
-//           text = text.substring(maxLength).trim();
-//       }
-//   }
-
-//   return speechChunks;
-// }
-  
-// function makeChunksOfText(text: string): string[]{
-//   const maxLength: number = 190;
-//   const punctuationRegex = /[,.]/;
-//   let speechChunks: string[] = [];
-//   let remainingText = text;
-
-//   while (remainingText.length > maxLength) {
-//       let punctuationIndex: number = -1;
-
-//       // Search for the last punctuation mark within maxLength characters
-//       for (let i = maxLength; i >= 0; i--) {
-//           if (punctuationRegex.test(remainingText[i])) {
-//               punctuationIndex = i;
-//               break;
-//           }
-//       }
-
-//       if (punctuationIndex !== -1) {
-//           // Include the punctuation mark in the current chunk
-//           speechChunks.push(remainingText.substring(0, punctuationIndex + 1));
-//           remainingText = remainingText.substring(punctuationIndex + 1).trim();
-//       } else {
-//           // If no suitable punctuation mark is found, split at maxLength
-//           speechChunks.push(remainingText.substring(0, maxLength));
-//           remainingText = remainingText.substring(maxLength).trim();
-//       }
-//   }
-
-//   // Push the remaining text as the last chunk
-//   if (remainingText.length > 0) {
-//       speechChunks.push(remainingText);
-//   }
-
-//   return speechChunks;
-// }
-
 function makeChunksOfText(text: string): string[] {
   const maxLength: number = 190;
   const periodRegex = /\./;
@@ -111,6 +42,7 @@ function makeChunksOfText(text: string): string[] {
   return speechChunks;
 }
 
+let cachedVoice: SpeechSynthesisVoice | null = null;
 
 async function getGermanVoice(): Promise<SpeechSynthesisVoice> {
   return new Promise(resolve => {
@@ -121,11 +53,9 @@ async function getGermanVoice(): Promise<SpeechSynthesisVoice> {
   });
 }
 
-let cachedVoice: SpeechSynthesisVoice | null = null;
-
-export const speakText = async (text: string): Promise<void> => {
+export const speakText = async (text: string, speed?: number): Promise<void> => {
   const speechChunks: string[] = makeChunksOfText(text);
-  console.log("speak Text");
+
   const germanVoice:SpeechSynthesisVoice = cachedVoice || await getGermanVoice();
     if (!germanVoice) {
         console.error('No German voice found.');
@@ -139,7 +69,7 @@ export const speakText = async (text: string): Promise<void> => {
   for (let i = 0; i < speechChunks.length; i++) {
       console.log(speechChunks[i]);
       let speech: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(speechChunks[i]);
-      speech.rate = 1.2;
+      speech.rate = speed || 1;
       speech.voice = germanVoice ;
       window.speechSynthesis.speak(speech);
   }
