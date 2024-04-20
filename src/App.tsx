@@ -10,8 +10,8 @@ function App() {
         This is a Tailwind CSS styled component.
       </div> */}
       <header className="App-header">
-        <div>
-          <img src={logo} alt="logo" className="App-logo" />
+        <div className="flex-row items-center justify-between pb-1">
+          <img src={logo} alt="logo" className="App-logo mx-auto" />
         </div>
         <div className="w-full">
           <h1 className="text-2xl text-white ">

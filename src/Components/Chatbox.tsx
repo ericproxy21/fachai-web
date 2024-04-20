@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { chat } from "../api/fachai";
-import { speakText } from "../tools/speechToText";
+import logo from "./logo.svg";
 import { ROLE, Message } from "../Types/common";
 import SpeedAdjuster from "./SpeedAdjuster";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import useTextToSpeech from "../hooks/useTextToSpeech";
 
 const Chatbox: React.FC = () => {
   const commands = [
@@ -22,6 +23,7 @@ const Chatbox: React.FC = () => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition({ commands });
+  const { speakText, hasGermanVoice } = useTextToSpeech();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,35 +45,38 @@ const Chatbox: React.FC = () => {
     }
   };
 
-  const fetchResponse = (msg: string) => {
-    console.log("Fetch Response...");
-    msg = msg.trim();
-    if (msg.length > 0) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: ROLE.User, content: msg },
-      ]);
-      setLoading(true);
+  const fetchResponse = useCallback(
+    (msg: string) => {
+      console.log("Fetch Response...");
+      msg = msg.trim();
+      if (msg.length > 0) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: ROLE.User, content: msg },
+        ]);
+        setLoading(true);
 
-      chat(msg).then((res: string) => {
-        console.log("chatgpt API call result: ", res);
+        chat(msg).then((res: string) => {
+          console.log("chatgpt API call result: ", res);
 
-        if (res) {
-          // To cancel the timer and reset it
-          speakText(res, speed);
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { role: ROLE.Assistant, content: res },
-          ]);
-          setInputValue("");
-        } else {
-          //Alert.alert('Error', res.data as unknown as string);
-        }
+          if (res) {
+            // To cancel the timer and reset it
+            speakText(res, speed);
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { role: ROLE.Assistant, content: res },
+            ]);
+            setInputValue("");
+          } else {
+            //Alert.alert('Error', res.data as unknown as string);
+          }
 
-        setLoading(false);
-      });
-    }
-  };
+          setLoading(false);
+        });
+      }
+    },
+    [setMessages, setLoading, speed, setInputValue, speakText]
+  );
 
   const startSpeaking = () => {};
   const stopSpeaking = () => {};
@@ -111,7 +116,7 @@ const Chatbox: React.FC = () => {
     <div className="flex flex-col h-full">
       <div
         ref={historyRef}
-        className="overflow-y-auto h-full flex-grow border border-gray-300 p-4 bg-white rounded-3xl text-black text-sm"
+        className="overflow-y-auto h-full flex-grow border border-gray-300 p-4 bg-white rounded-2xl text-black text-sm"
       >
         {messages.map((message, index) => {
           const messageStyle =
@@ -142,6 +147,7 @@ const Chatbox: React.FC = () => {
           )}
         </div>
       </div>
+
       <div className="flex items-center pt-2">
         <input
           type="text"
@@ -186,23 +192,12 @@ const Chatbox: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-row items-center justify-between pb-10">
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          {!browserSupportsSpeechRecognition ? (
-            <span>Browser doesn't support speech recognition.</span>
-          ) : (
-            <></>
-          )}
-          {!isMicrophoneAvailable ? (
-            <span>Microphone is not available.</span>
-          ) : (
-            <></>
-          )}
-
+      <div className="flex-row items-center justify-between pb-5">
+        <div className="items-center">
           {listening ? (
             <button onClick={stopRecording}>
               <img
-                className="rounded-full w-10 h-10"
+                className="rounded-full w-10 h-10 mx-auto"
                 src={require("../assets/voiceLoading.gif")}
                 alt="voiceLoading"
               />
@@ -215,13 +210,33 @@ const Chatbox: React.FC = () => {
               }
             >
               <img
-                className="rounded-full w-10 h-10"
+                className="rounded-full w-10 h-10 mx-auto"
                 src={require("../assets/recordingIcon.png")}
                 alt="recordingIcon"
               />
             </button>
           )}
         </div>
+      </div>
+
+      <div className="flex-row items-center justify-between pb-1">
+        {!hasGermanVoice ? (
+          <span className="text-sm">Browser doesn't have German voice.</span>
+        ) : (
+          <></>
+        )}
+        {!browserSupportsSpeechRecognition ? (
+          <span className="text-sm">
+            Browser doesn't support speech recognition.
+          </span>
+        ) : (
+          <></>
+        )}
+        {!isMicrophoneAvailable ? (
+          <span className="text-sm">Microphone is not available.</span>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
