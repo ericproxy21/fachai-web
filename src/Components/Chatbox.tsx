@@ -3,12 +3,28 @@ import { chat } from "../api/fachai";
 import { speakText } from "../tools/speechToText";
 import { ROLE, Message } from "../Types/common";
 import SpeedAdjuster from "./SpeedAdjuster";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const Chatbox: React.FC = () => {
+  const commands = [
+    {
+      command: "evaluate",
+      callback: () => evaluateSession(),
+    },
+  ];
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition({ commands });
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [recording, setRecording] = useState<boolean>(false);
   const [speaking, setSpeaking] = useState<boolean>(false);
   const [speed, setSpeed] = useState(1.2);
   const historyRef = useRef<HTMLDivElement>(null);
@@ -18,7 +34,7 @@ const Chatbox: React.FC = () => {
   };
 
   const handleSendMessage = () => {
-    fetchResponse();
+    fetchResponse(inputValue);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,11 +43,10 @@ const Chatbox: React.FC = () => {
     }
   };
 
-  const fetchResponse = () => {
+  const fetchResponse = (msg: string) => {
     console.log("Fetch Response...");
-    if (inputValue.trim().length > 0) {
-      const msg = inputValue.trim();
-
+    msg = msg.trim();
+    if (msg.length > 0) {
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: ROLE.User, content: msg },
@@ -44,29 +59,11 @@ const Chatbox: React.FC = () => {
         if (res) {
           // To cancel the timer and reset it
           speakText(res, speed);
-          // window.speechSynthesis.cancel();
-          // myTimeout = setTimeout(myTimer, 10000);
-
-          // const toSpeak: string = res;
-          // const utt: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(
-          //   toSpeak
-          // );
-
-          // utt.onend = (): void => {
-          //   clearTimeout(myTimeout);
-          // };
-          // utt.voice = germanVoice;
-          // utt.rate = 1.2;
-
-          // window.speechSynthesis.speak(utt);
-
           setMessages((prevMessages) => [
             ...prevMessages,
             { role: ROLE.Assistant, content: res },
           ]);
           setInputValue("");
-
-          //startTextToSpeech(res.data[res.data.length - 1].content);
         } else {
           //Alert.alert('Error', res.data as unknown as string);
         }
@@ -78,8 +75,18 @@ const Chatbox: React.FC = () => {
 
   const startSpeaking = () => {};
   const stopSpeaking = () => {};
-  const startRecording = () => {};
-  const stopRecording = () => {};
+
+  const startRecording = () => {
+    console.log("start recording");
+    resetTranscript();
+    SpeechRecognition.startListening(); //{ language: 'zh-CN' }
+    while (listening) {}
+  };
+
+  const stopRecording = () => {
+    SpeechRecognition.stopListening();
+    // fetchResponse(transcript);
+  };
   const clearMessageHistory = () => {};
   const evaluateSession = () => {
     clearMessageHistory();
@@ -90,7 +97,11 @@ const Chatbox: React.FC = () => {
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
-  }, [messages]);
+    if (!listening && transcript !== "") {
+      fetchResponse(transcript);
+      resetTranscript();
+    }
+  }, [messages, listening, transcript, fetchResponse, resetTranscript]);
 
   const handleSpeedChange = (newSpeed: number) => {
     setSpeed(newSpeed);
@@ -175,20 +186,36 @@ const Chatbox: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex items-center pt-2 justify-between">
+      <div className="flex-row items-center justify-between pb-10">
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          {recording ? (
+          {!browserSupportsSpeechRecognition ? (
+            <span>Browser doesn't support speech recognition.</span>
+          ) : (
+            <></>
+          )}
+          {!isMicrophoneAvailable ? (
+            <span>Microphone is not available.</span>
+          ) : (
+            <></>
+          )}
+
+          {listening ? (
             <button onClick={stopRecording}>
               <img
-                className="rounded-full w-20 h-20"
+                className="rounded-full w-10 h-10"
                 src={require("../assets/voiceLoading.gif")}
                 alt="voiceLoading"
               />
             </button>
           ) : (
-            <button onClick={startRecording}>
+            <button
+              onClick={startRecording}
+              disabled={
+                !browserSupportsSpeechRecognition && !isMicrophoneAvailable
+              }
+            >
               <img
-                className="rounded-full w-20 h-20"
+                className="rounded-full w-10 h-10"
                 src={require("../assets/recordingIcon.png")}
                 alt="recordingIcon"
               />
