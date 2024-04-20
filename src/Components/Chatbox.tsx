@@ -167,11 +167,20 @@ const Chatbox: React.FC = () => {
           </button>
         </div>
 
+        <button
+          onClick={evaluateSession}
+          className="ml-1 bg-green-500 text-white px-4 py-2 rounded-md text-sm"
+        >
+          Evaluate
+        </button>
+      </div>
+
+      <div className="flex items-center pt-2 justify-between">
         <div className="absolute left-1/2 transform -translate-x-1/2">
           {recording ? (
             <button onClick={stopRecording}>
               <img
-                className="rounded-full w-10 h-10"
+                className="rounded-full w-20 h-20"
                 src={require("../assets/voiceLoading.gif")}
                 alt="voiceLoading"
               />
@@ -179,20 +188,13 @@ const Chatbox: React.FC = () => {
           ) : (
             <button onClick={startRecording}>
               <img
-                className="rounded-full w-10 h-10"
+                className="rounded-full w-20 h-20"
                 src={require("../assets/recordingIcon.png")}
                 alt="recordingIcon"
               />
             </button>
           )}
         </div>
-
-        <button
-          onClick={evaluateSession}
-          className="ml-1 bg-green-500 text-white px-4 py-2 rounded-md text-sm"
-        >
-          Evaluate
-        </button>
       </div>
     </div>
   );
