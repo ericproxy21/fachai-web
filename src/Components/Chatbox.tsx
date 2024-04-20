@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ROLE, Message } from "./common";
+import { chat } from "../api/fachai";
+import { ROLE, Message } from "../Types/common";
 
 const Chatbox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [recording, setRecording] = useState<boolean>(false);
+  const [speaking, setSpeaking] = useState<boolean>(false);
   const historyRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,19 +15,39 @@ const Chatbox: React.FC = () => {
   };
 
   const handleSendMessage = () => {
-    if (inputValue.trim() !== "") {
-      setMessages([
-        ...messages,
-        { content: inputValue, role: ROLE.User },
-        { content: "AI REPLY", role: ROLE.Assistant },
-      ]);
-      setInputValue("");
-    }
+    fetchResponse();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSendMessage();
+    }
+  };
+
+  const fetchResponse = () => {
+    console.log("Fetch Response...");
+    if (inputValue.trim().length > 0) {
+      const msg = inputValue.trim();
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: ROLE.User, content: msg },
+      ]);
+      setLoading(true);
+
+      chat(msg).then((res: string) => {
+        console.log("chatgpt API call result: ", res);
+        setLoading(false);
+        if (res) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { role: ROLE.Assistant, content: res },
+          ]);
+          setInputValue("");
+          //startTextToSpeech(res.data[res.data.length - 1].content);
+        } else {
+          //Alert.alert('Error', res.data as unknown as string);
+        }
+      });
     }
   };
 
@@ -40,12 +64,6 @@ const Chatbox: React.FC = () => {
         ref={historyRef}
         className="overflow-y-auto h-full flex-grow border border-gray-300 p-4 bg-white rounded-3xl text-black text-sm"
       >
-        {/* {messages.map((message, index) => (
-          <div key={index} className="my-2">
-            {message.text}
-          </div>
-        ))} */}
-
         {messages.map((message, index) => {
           const messageStyle =
             message.role === ROLE.User ? "bg-green-300" : "bg-blue-300";
@@ -56,7 +74,7 @@ const Chatbox: React.FC = () => {
             <div key={index} className={`flex-row flex mb-3 ${containerStyle}`}>
               <div
                 style={{ maxWidth: "70%" }}
-                className={`flex rounded-xl p-2 ${messageStyle} rounded-tl-none`}
+                className={`flex rounded-xl p-2 ${messageStyle} rounded-tl-none text-left`}
               >
                 <p className="text-black">{message.content}</p>
               </div>
