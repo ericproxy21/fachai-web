@@ -53,17 +53,20 @@ function useTextToSpeech(): TextToSpeechHook {
     return speechChunks;
   }
 
-  async function getGermanVoice(): Promise<SpeechSynthesisVoice> {
-    return new Promise(resolve => {
+  async function getGermanVoice() {
+
       window.speechSynthesis.onvoiceschanged = () => {
         const germanVoice = window.speechSynthesis.getVoices().find(voice => voice.lang.startsWith('de'));
         if (germanVoice) {
           setVoice(germanVoice);
           setHasGermanVoice(true);
+        } else {
+          setVoice(window.speechSynthesis.getVoices()[0]);
+          setHasGermanVoice(false);
         }
-        resolve(germanVoice || window.speechSynthesis.getVoices()[0]);
+
       };
-    });
+
   }
 
   async function speakText(text: string, speed?: number): Promise<void> {
@@ -79,14 +82,7 @@ function useTextToSpeech(): TextToSpeechHook {
   }
 
   useEffect(() => {
-    async function fetchGermanVoice() {
-      const voice = await getGermanVoice();
-      if (voice) {
-        setVoice(voice);
-      }
-    }
-    
-    fetchGermanVoice();
+    getGermanVoice();
 
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
