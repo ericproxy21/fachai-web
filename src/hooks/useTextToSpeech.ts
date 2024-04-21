@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 
 interface TextToSpeechHook {
   speakText: (text: string, speed?: number) => Promise<void>;
-  hasGermanVoice: boolean;
+  hasGermanVoice: boolean | null;
+  stopText: () => Promise<void>;
+  isSpeakingText: boolean;
 }
 
 function useTextToSpeech(): TextToSpeechHook {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [hasGermanVoice, setHasGermanVoice] = useState<boolean | null>(null);
+  const [isSpeakingText, setIsSpeakingText] = useState<boolean>(false);
   
   async function makeChunksOfText(text: string): Promise<string[]> {
     const maxLength: number = 190;
@@ -75,19 +78,26 @@ function useTextToSpeech(): TextToSpeechHook {
       let speech: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(speechChunks[i]);
       speech.rate = speed || 1;
       speech.voice = voice;
+      speech.onstart = () => setIsSpeakingText(true);
+      speech.onend = () => setIsSpeakingText(false);
       window.speechSynthesis.speak(speech);
     }
   }
 
+  async function stopText(): Promise<void> {
+    window.speechSynthesis.cancel();
+  }
+
   useEffect(() => {
     getGermanVoice();
+    
 
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
     };
   }, []);
 
-  return { speakText, hasGermanVoice };
+  return { speakText, hasGermanVoice, stopText, isSpeakingText };
 }
 
 export default useTextToSpeech;
