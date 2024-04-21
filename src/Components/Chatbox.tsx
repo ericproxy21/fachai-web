@@ -55,7 +55,6 @@ const Chatbox: React.FC = () => {
 
   const fetchResponse = useCallback(
     (msg: string) => {
-      console.log("Fetch Response...");
       msg = msg.trim();
       if (msg.length > 0 && historyKey.length > 0) {
         setMessages((prevMessages) => [
@@ -65,8 +64,6 @@ const Chatbox: React.FC = () => {
         setLoading(true);
 
         chat(msg, historyKey).then((res: string) => {
-          console.log("chatgpt API call result: ", res);
-
           if (res) {
             // To cancel the timer and reset it
             setSpeaking(true);
@@ -88,12 +85,11 @@ const Chatbox: React.FC = () => {
   );
 
   const stopSpeaking = () => {
-    stopText();
     setSpeaking(false);
+    stopText();
   };
 
   const startRecording = () => {
-    console.log("start recording");
     resetTranscript();
     SpeechRecognition.startListening(); //{ language: 'zh-CN' }
     while (listening) {}
@@ -107,6 +103,11 @@ const Chatbox: React.FC = () => {
     setMessages([]);
   };
 
+  const resetSession = () => {
+    clearMessageHistory();
+    setup();
+  };
+
   const evaluateSession = () => {
     setLoading(true);
 
@@ -116,6 +117,10 @@ const Chatbox: React.FC = () => {
         // Update state after both actions are completed
         setMessages((prevMessages) => [
           ...prevMessages,
+          {
+            role: ROLE.Assistant,
+            content: `Die Krankheit des Patienten ist ${disease}.`,
+          },
           { role: ROLE.Assistant, content: performanceRes },
           { role: ROLE.Assistant, content: languageRes },
         ]);
@@ -130,24 +135,24 @@ const Chatbox: React.FC = () => {
       });
   };
 
+  const setup = async () => {
+    try {
+      const response = await setupSession();
+      const { disease, historyKey } = await response;
+      setDisease(disease);
+      setHistoryKey(historyKey);
+      console.log(`Disease is ${disease} and History Key is ${historyKey}`);
+      // Handle API response as needed
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Handle errors
+    }
+  };
+
   useEffect(() => {
     // Effect for making the API call when component mounts
-    const fetchData = async () => {
-      try {
-        const response = await setupSession();
-        console.log("Setting up Session..");
-        const { disease, historyKey } = await response;
-        setDisease(disease);
-        setHistoryKey(historyKey);
-        console.log(`Disease is ${disease} and History Key is ${historyKey}`);
-        // Handle API response as needed
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle errors
-      }
-    };
 
-    fetchData(); // Call the fetchData function
+    setup(); // Call the fetchData function
   }, []); // Empty dependency array ensures the effect runs only once
 
   // Scroll to the bottom of the chat history when messages change
@@ -159,7 +164,7 @@ const Chatbox: React.FC = () => {
       fetchResponse(transcript);
       resetTranscript();
     }
-    setSpeaking(isSpeakingText);
+    if (isSpeakingText === false) setSpeaking(false);
   }, [
     messages,
     listening,
@@ -247,6 +252,12 @@ const Chatbox: React.FC = () => {
           >
             <span role="img" aria-label="Stop Sign">
               ⏸️
+            </span>
+          </button>
+
+          <button onClick={resetSession} disabled={loading} className="ml-5">
+            <span role="img" aria-label="Stop Sign">
+              🔄
             </span>
           </button>
         </div>

@@ -9,7 +9,6 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await helloWorld();
-        console.log(response.message);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
