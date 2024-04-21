@@ -22,13 +22,50 @@ export const helloWorld = async () => {
   }
 }
 
-export const chat = async (message: string) => {
+export const chat = async (message: string, historyKey: string) => {
   try {
     const response = await api.post('chat', {
-      message: message
+      message: message,
+      historyKey: historyKey
     });
 
-    // Assuming you want to return the response data
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error('Error connecting to API:', error);
+  }
+};
+
+export const setupSession = async () => {
+  try {
+    const response = await api.post('setupSession');
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error('Error connecting to API:', error);
+  }
+};
+
+
+export const ratePerformance = async (historyKey: string) => {
+  try {
+    const response = await api.post('ratePerformance', {
+      historyKey: historyKey
+    });
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error('Error connecting to API:', error);
+  }
+};
+
+export const rateLanguage = async (historyKey: string) => {
+  try {
+    const response = await api.post('rateLanguage', {
+      historyKey: historyKey
+    });
+
     return response.data;
   } catch (error) {
     // Handle errors

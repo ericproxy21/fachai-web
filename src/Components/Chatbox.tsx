@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { chat } from "../api/fachai";
+import {
+  chat,
+  rateLanguage,
+  ratePerformance,
+  setupSession,
+} from "../api/fachai";
 import { ROLE, Message } from "../Types/common";
 import SpeedAdjuster from "./SpeedAdjuster";
 import SpeechRecognition, {
@@ -29,6 +34,8 @@ const Chatbox: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [speaking, setSpeaking] = useState<boolean>(false);
   const [speed, setSpeed] = useState(1.2);
+  const [disease, setDisease] = useState<string>("");
+  const [historyKey, setHistoryKey] = useState<string>("");
   const historyRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +57,14 @@ const Chatbox: React.FC = () => {
     (msg: string) => {
       console.log("Fetch Response...");
       msg = msg.trim();
-      if (msg.length > 0) {
+      if (msg.length > 0 && historyKey.length > 0) {
         setMessages((prevMessages) => [
           ...prevMessages,
           { role: ROLE.User, content: msg },
         ]);
         setLoading(true);
 
-        chat(msg).then((res: string) => {
+        chat(msg, historyKey).then((res: string) => {
           console.log("chatgpt API call result: ", res);
 
           if (res) {
@@ -77,7 +84,7 @@ const Chatbox: React.FC = () => {
         });
       }
     },
-    [setMessages, setLoading, speed, setInputValue, speakText]
+    [setMessages, setLoading, speed, setInputValue, speakText, historyKey]
   );
 
   const stopSpeaking = () => {
@@ -96,10 +103,52 @@ const Chatbox: React.FC = () => {
     SpeechRecognition.stopListening();
     // fetchResponse(transcript);
   };
-  const clearMessageHistory = () => {};
-  const evaluateSession = () => {
-    clearMessageHistory();
+  const clearMessageHistory = () => {
+    setMessages([]);
   };
+
+  const evaluateSession = () => {
+    setLoading(true);
+
+    // Perform both actions concurrently using Promise.all
+    Promise.all([ratePerformance(historyKey), rateLanguage(historyKey)])
+      .then(([performanceRes, languageRes]) => {
+        // Update state after both actions are completed
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: ROLE.Assistant, content: performanceRes },
+          { role: ROLE.Assistant, content: languageRes },
+        ]);
+      })
+      .catch((error) => {
+        // Handle errors if needed
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        // Set loading to false after both actions are completed
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    // Effect for making the API call when component mounts
+    const fetchData = async () => {
+      try {
+        const response = await setupSession();
+        console.log("Setting up Session..");
+        const { disease, historyKey } = await response;
+        setDisease(disease);
+        setHistoryKey(historyKey);
+        console.log(`Disease is ${disease} and History Key is ${historyKey}`);
+        // Handle API response as needed
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle errors
+      }
+    };
+
+    fetchData(); // Call the fetchData function
+  }, []); // Empty dependency array ensures the effect runs only once
 
   // Scroll to the bottom of the chat history when messages change
   useEffect(() => {
