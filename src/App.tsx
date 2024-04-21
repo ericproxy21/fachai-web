@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import Chatbox from "./Components/Chatbox";
+import { helloWorld } from "./api/fachai";
 
 function App() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await helloWorld();
+        console.log(response.message);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
       {/* <div className="bg-blue-500 text-white p-4">

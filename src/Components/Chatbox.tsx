@@ -116,7 +116,7 @@ const Chatbox: React.FC = () => {
     <div className="flex flex-col h-full">
       <div
         ref={historyRef}
-        className="overflow-y-auto h-full flex-grow border border-gray-300 p-4 bg-white rounded-2xl text-black text-sm"
+        className="overflow-y-auto flex-grow border border-gray-300 p-4 bg-white rounded-2xl text-black text-sm"
       >
         {messages.map((message, index) => {
           const messageStyle =
