@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Fachai",
+  "name": "Doctor-patient conversation practice for Fachsprachenprüfung exam",
   "icons": [
     {
       "src": "favicon.ico",
