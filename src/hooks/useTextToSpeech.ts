@@ -7,8 +7,8 @@ interface TextToSpeechHook {
 
 function useTextToSpeech(): TextToSpeechHook {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const [hasGermanVoice, setHasGermanVoice] = useState<boolean>(false);
-
+  const [hasGermanVoice, setHasGermanVoice] = useState<boolean | null>(null);
+  
   async function makeChunksOfText(text: string): Promise<string[]> {
     const maxLength: number = 190;
     const periodRegex = /\./;
@@ -54,7 +54,6 @@ function useTextToSpeech(): TextToSpeechHook {
   }
 
   async function getGermanVoice() {
-
       window.speechSynthesis.onvoiceschanged = () => {
         const germanVoice = window.speechSynthesis.getVoices().find(voice => voice.lang.startsWith('de'));
         if (germanVoice) {
@@ -64,7 +63,6 @@ function useTextToSpeech(): TextToSpeechHook {
           setVoice(window.speechSynthesis.getVoices()[0]);
           setHasGermanVoice(false);
         }
-
       };
 
   }

@@ -220,7 +220,7 @@ const Chatbox: React.FC = () => {
       </div>
 
       <div className="flex-row items-center justify-between pb-1">
-        {!hasGermanVoice ? (
+        {hasGermanVoice !== null && hasGermanVoice === false ? (
           <span className="text-sm">Browser doesn't have German voice.</span>
         ) : (
           <></>
