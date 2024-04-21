@@ -29,7 +29,7 @@ function App() {
         </div>
         <div className="w-full">
           <h1 className="text-2xl text-white ">
-            Doctor-Patient Conversation Practice
+            Arzt-Patienten-Gesprächsübung
           </h1>
         </div>
         <div className="flex-grow pt-8 h-96 w-full inline-block px-8">
