@@ -32,6 +32,7 @@ const Chatbox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [sessionEnded, setSessionEnded] = useState<boolean>(false);
   const [speaking, setSpeaking] = useState<boolean>(false);
   const [speed, setSpeed] = useState(1.2);
   const [disease, setDisease] = useState<string>("");
@@ -85,7 +86,6 @@ const Chatbox: React.FC = () => {
   );
 
   const stopSpeaking = () => {
-    setSpeaking(false);
     stopText();
   };
 
@@ -105,12 +105,13 @@ const Chatbox: React.FC = () => {
 
   const resetSession = () => {
     clearMessageHistory();
+    setSessionEnded(false);
     setup();
   };
 
   const evaluateSession = () => {
     setLoading(true);
-
+    setSessionEnded(true);
     // Perform both actions concurrently using Promise.all
     Promise.all([ratePerformance(historyKey), rateLanguage(historyKey)])
       .then(([performanceRes, languageRes]) => {
@@ -164,7 +165,8 @@ const Chatbox: React.FC = () => {
       fetchResponse(transcript);
       resetTranscript();
     }
-    if (isSpeakingText === false) setSpeaking(false);
+
+    setSpeaking(isSpeakingText);
   }, [
     messages,
     listening,
@@ -222,16 +224,16 @@ const Chatbox: React.FC = () => {
           placeholder=""
           className="border border-gray-300 p-2 rounded-md flex-grow text-black text-sm"
           onKeyDown={handleKeyDown}
-          disabled={loading}
+          disabled={loading || sessionEnded}
         />
         <button
-          onClick={loading ? undefined : handleSendMessage}
+          onClick={loading || sessionEnded ? undefined : handleSendMessage}
           className={`ml-1 px-4 py-2 rounded-md text-sm ${
-            loading
+            loading || sessionEnded
               ? "bg-gray-400 text-gray-600 cursor-not-allowed"
               : "bg-blue-500 text-white"
           }`}
-          disabled={loading}
+          disabled={loading || sessionEnded}
         >
           Send
         </button>
@@ -262,7 +264,7 @@ const Chatbox: React.FC = () => {
           </button>
         </div>
 
-        {loading || speaking ? (
+        {loading || speaking || sessionEnded ? (
           <button
             className="ml-1 bg-gray-400 text-gray-600 px-4 py-2 rounded-md text-sm cursor-not-allowed"
             disabled
