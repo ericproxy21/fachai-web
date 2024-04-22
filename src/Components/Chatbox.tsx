@@ -209,6 +209,20 @@ const Chatbox: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="flex justify-end">
+        <select
+          id="language-select"
+          value={selectedLanguage}
+          onChange={handleLanguageChange}
+          className="text-black text-sm ml-auto p-1 mb-1"
+        >
+          <option value="German">DE</option>
+          <option value="English">EN</option>
+          <option value="Spanish">ES</option>
+          <option value="French">FR</option>
+          <option value="Italian">IT</option>
+        </select>
+      </div>
       <div
         ref={historyRef}
         className="overflow-y-auto flex-grow border border-gray-300 p-4 bg-white rounded-2xl text-black text-sm"
@@ -276,19 +290,6 @@ const Chatbox: React.FC = () => {
 
       <div className="flex items-center pt-2 justify-between">
         <div className="flex ml-0">
-          <select
-            id="language-select"
-            value={selectedLanguage}
-            onChange={handleLanguageChange}
-            className="text-black text-sm align-middle p-1"
-          >
-            <option value="German">DE</option>
-            <option value="English">EN</option>
-            <option value="Spanish">ES</option>
-            <option value="French">FR</option>
-            <option value="Italian">IT</option>
-          </select>
-
           <div className="ml-4">
             <SpeedAdjuster
               speed={speed}
