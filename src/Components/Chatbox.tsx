@@ -294,7 +294,7 @@ const Chatbox: React.FC = () => {
           </button>
         </div>
 
-        {loading || speaking || sessionEnded ? (
+        {loading || speaking || sessionEnded || messages.length === 0 ? (
           <button
             className="ml-1 bg-gray-400 text-gray-600 px-4 py-2 rounded-md text-sm cursor-not-allowed"
             disabled
