@@ -22,11 +22,12 @@ export const helloWorld = async () => {
   }
 }
 
-export const chat = async (message: string, historyKey: string) => {
+export const chat = async (message: string, historyKey: string, language: string) => {
   try {
     const response = await api.post('chat', {
       message: message,
-      historyKey: historyKey
+      historyKey: historyKey,
+      language: language
     });
 
     return response.data;
@@ -60,10 +61,11 @@ export const ratePerformance = async (historyKey: string) => {
   }
 };
 
-export const rateLanguage = async (historyKey: string) => {
+export const rateLanguage = async (historyKey: string, language: string) => {
   try {
     const response = await api.post('rateLanguage', {
-      historyKey: historyKey
+      historyKey: historyKey,
+      language: language
     });
 
     return response.data;

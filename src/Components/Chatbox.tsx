@@ -27,8 +27,7 @@ const Chatbox: React.FC = () => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition({ commands });
-  const { speakText, hasGermanVoice, stopText, isSpeakingText } =
-    useTextToSpeech();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,6 +37,9 @@ const Chatbox: React.FC = () => {
   const [disease, setDisease] = useState<string>("");
   const [isHideAiText, setIsHideAiText] = useState<boolean>(false);
   const [historyKey, setHistoryKey] = useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("German");
+  const { speakText, hasLangVoice, stopText, isSpeakingText } =
+    useTextToSpeech(selectedLanguage);
   const historyRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +57,14 @@ const Chatbox: React.FC = () => {
     }
   };
 
+  const handleLanguageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const lang = event.target.value;
+    setSelectedLanguage(lang);
+    resetSession();
+  };
+
   const fetchResponse = useCallback(
     (msg: string) => {
       msg = msg.trim();
@@ -65,7 +75,7 @@ const Chatbox: React.FC = () => {
         ]);
         setLoading(true);
 
-        chat(msg, historyKey).then((res: string) => {
+        chat(msg, historyKey, selectedLanguage).then((res: string) => {
           if (res) {
             // To cancel the timer and reset it
             setSpeaking(true);
@@ -83,7 +93,15 @@ const Chatbox: React.FC = () => {
         });
       }
     },
-    [setMessages, setLoading, speed, setInputValue, speakText, historyKey]
+    [
+      setMessages,
+      setLoading,
+      speed,
+      setInputValue,
+      speakText,
+      historyKey,
+      selectedLanguage,
+    ]
   );
 
   const stopSpeaking = () => {
@@ -114,7 +132,10 @@ const Chatbox: React.FC = () => {
     setLoading(true);
     setSessionEnded(true);
     // Perform both actions concurrently using Promise.all
-    Promise.all([ratePerformance(historyKey), rateLanguage(historyKey)])
+    Promise.all([
+      ratePerformance(historyKey),
+      rateLanguage(historyKey, selectedLanguage),
+    ])
       .then(([performanceRes, languageRes]) => {
         // Update state after both actions are completed
         setMessages((prevMessages) => [
@@ -147,21 +168,19 @@ const Chatbox: React.FC = () => {
       const { disease, historyKey } = await response;
       setDisease(disease);
       setHistoryKey(historyKey);
-      console.log(`Disease is ${disease} and History Key is ${historyKey}`);
-      // Handle API response as needed
+      //console.log(`Disease is ${disease} and History Key is ${historyKey}`);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Handle errors
     }
   };
 
   useEffect(() => {
-    // Effect for making the API call when component mounts
-
+    // Effect for making the API call when component mount
     setup(); // Call the fetchData function
   }, []); // Empty dependency array ensures the effect runs only once
 
   // Scroll to the bottom of the chat history when messages change
+
   useEffect(() => {
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
@@ -170,7 +189,6 @@ const Chatbox: React.FC = () => {
       fetchResponse(transcript);
       resetTranscript();
     }
-
     setSpeaking(isSpeakingText);
   }, [
     messages,
@@ -258,11 +276,26 @@ const Chatbox: React.FC = () => {
 
       <div className="flex items-center pt-2 justify-between">
         <div className="flex ml-0">
-          <SpeedAdjuster
-            speed={speed}
-            onSpeedChange={handleSpeedChange}
-            disabled={loading || speaking}
-          />
+          <select
+            id="language-select"
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
+            className="text-black text-sm align-middle p-1"
+          >
+            <option value="German">DE</option>
+            <option value="English">EN</option>
+            <option value="Spanish">ES</option>
+            <option value="French">FR</option>
+            <option value="Italian">IT</option>
+          </select>
+
+          <div className="ml-4">
+            <SpeedAdjuster
+              speed={speed}
+              onSpeedChange={handleSpeedChange}
+              disabled={loading || speaking}
+            />
+          </div>
 
           <button
             onClick={stopSpeaking}
@@ -353,8 +386,10 @@ const Chatbox: React.FC = () => {
       </div>
 
       <div className="flex-row items-center justify-between pb-1">
-        {hasGermanVoice !== null && hasGermanVoice === false ? (
-          <span className="text-sm">Browser doesn't have German voice.</span>
+        {hasLangVoice !== null && hasLangVoice === false ? (
+          <span className="text-sm">
+            Browser doesn't have {selectedLanguage} voice.
+          </span>
         ) : (
           <></>
         )}

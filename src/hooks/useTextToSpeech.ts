@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface TextToSpeechHook {
   speakText: (text: string, speed?: number) => Promise<void>;
-  hasGermanVoice: boolean | null;
+  hasLangVoice: boolean | null;
   stopText: () => Promise<void>;
   isSpeakingText: boolean;
 }
 
-function useTextToSpeech(): TextToSpeechHook {
+function useTextToSpeech(language: string): TextToSpeechHook {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const [hasGermanVoice, setHasGermanVoice] = useState<boolean | null>(null);
+  const [hasLangVoice, sethasLangVoice] = useState<boolean | null>(null);
   const [isSpeakingText, setIsSpeakingText] = useState<boolean>(false);
-  
+
   async function makeChunksOfText(text: string): Promise<string[]> {
     const maxLength: number = 190;
     const periodRegex = /\./;
@@ -56,18 +56,42 @@ function useTextToSpeech(): TextToSpeechHook {
     return speechChunks;
   }
 
-  async function getGermanVoice() {
-      window.speechSynthesis.onvoiceschanged = () => {
-        const germanVoice = window.speechSynthesis.getVoices().find(voice => voice.lang.startsWith('de'));
-        if (germanVoice) {
-          setVoice(germanVoice);
-          setHasGermanVoice(true);
-        } else {
-          setVoice(window.speechSynthesis.getVoices()[0]);
-          setHasGermanVoice(false);
-        }
-      };
+  const getVoice = useCallback(async (language: string) => {
+    let lang: string;
+    switch (language.toLowerCase()) {
+      case "english":
+        lang = "en";
+        break;
+      case "german":
+        lang = "de";
+        break;
+      case "spanish":
+        lang = "es";
+        break;
+      case "french":
+        lang = "fr";
+        break;
+      default:
+        lang = "de"; // Default to English
+        break;
+    }
 
+    window.speechSynthesis.onvoiceschanged = () => {
+      findVoice(lang);
+    };
+
+    findVoice(lang);
+  }, []);
+
+  const findVoice = (lang: string) => {
+    const voice = window.speechSynthesis.getVoices().find(voice => voice.lang.startsWith(lang));
+    if (voice) {
+      setVoice(voice);
+      sethasLangVoice(true);
+    } else {
+      setVoice(window.speechSynthesis.getVoices()[0]);
+      sethasLangVoice(false);
+    }
   }
 
   async function speakText(text: string, speed?: number): Promise<void> {
@@ -91,15 +115,15 @@ function useTextToSpeech(): TextToSpeechHook {
   }
 
   useEffect(() => {
-    getGermanVoice();
+    getVoice(language);
     
 
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
     };
-  }, []);
+  }, [getVoice, language]);
 
-  return { speakText, hasGermanVoice, stopText, isSpeakingText };
+  return { speakText, hasLangVoice, stopText, isSpeakingText };
 }
 
 export default useTextToSpeech;
