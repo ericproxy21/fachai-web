@@ -48,10 +48,11 @@ export const setupSession = async () => {
 };
 
 
-export const ratePerformance = async (historyKey: string) => {
+export const ratePerformance = async (historyKey: string, language: string) => {
   try {
     const response = await api.post('ratePerformance', {
-      historyKey: historyKey
+      historyKey: historyKey,
+      language: language
     });
 
     return response.data;
