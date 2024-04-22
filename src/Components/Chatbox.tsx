@@ -126,6 +126,10 @@ const Chatbox: React.FC = () => {
           { role: ROLE.Assistant, content: performanceRes },
           { role: ROLE.Assistant, content: languageRes },
         ]);
+        speakText(
+          `Die Krankheit des Patienten ist ${disease}. ${performanceRes} ${languageRes}`,
+          speed
+        );
       })
       .catch((error) => {
         // Handle errors if needed
