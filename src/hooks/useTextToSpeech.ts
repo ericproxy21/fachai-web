@@ -79,6 +79,8 @@ function useTextToSpeech(): TextToSpeechHook {
       speech.rate = speed || 1;
       speech.voice = voice;
       speech.onstart = () => setIsSpeakingText(true);
+      speech.onpause = () => setIsSpeakingText(false);
+      speech.onerror = () => setIsSpeakingText(false);
       speech.onend = () => setIsSpeakingText(false);
       window.speechSynthesis.speak(speech);
     }
