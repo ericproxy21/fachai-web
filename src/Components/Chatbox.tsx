@@ -36,6 +36,7 @@ const Chatbox: React.FC = () => {
   const [speaking, setSpeaking] = useState<boolean>(false);
   const [speed, setSpeed] = useState(1.2);
   const [disease, setDisease] = useState<string>("");
+  const [isHideAiText, setIsHideAiText] = useState<boolean>(false);
   const [historyKey, setHistoryKey] = useState<string>("");
   const historyRef = useRef<HTMLDivElement>(null);
 
@@ -180,6 +181,10 @@ const Chatbox: React.FC = () => {
     setSpeed(newSpeed);
   };
 
+  const hideAiText = () => {
+    setIsHideAiText(!isHideAiText);
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div
@@ -198,7 +203,15 @@ const Chatbox: React.FC = () => {
                 style={{ maxWidth: "70%" }}
                 className={`flex rounded-xl p-2 ${messageStyle} rounded-tl-none text-left`}
               >
-                <p className="text-black">{message.content}</p>
+                <p
+                  className={`text-black ${
+                    isHideAiText && message.role === ROLE.Assistant
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
+                  {message.content}
+                </p>{" "}
               </div>
             </div>
           );
@@ -250,15 +263,32 @@ const Chatbox: React.FC = () => {
           <button
             onClick={stopSpeaking}
             disabled={messages.length === 0}
-            className="ml-5"
+            className="ml-4"
+            title="Stop AI speaking"
           >
             <span role="img" aria-label="Stop Sign">
               ⏸️
             </span>
           </button>
 
-          <button onClick={resetSession} disabled={loading} className="ml-5">
-            <span role="img" aria-label="Stop Sign">
+          <button
+            onClick={hideAiText}
+            disabled={loading}
+            className="ml-4"
+            title="Hide AI text"
+          >
+            <span role="img" aria-label="Reset Sign">
+              👁️
+            </span>
+          </button>
+
+          <button
+            onClick={resetSession}
+            disabled={loading}
+            className="ml-4"
+            title="Reset session"
+          >
+            <span role="img" aria-label="Reset Sign">
               🔄
             </span>
           </button>
