@@ -290,7 +290,7 @@ const Chatbox: React.FC = () => {
 
       <div className="flex items-center pt-2 justify-between">
         <div className="flex ml-0">
-          <div className="ml-4">
+          <div className="ml-3">
             <SpeedAdjuster
               speed={speed}
               onSpeedChange={handleSpeedChange}
@@ -301,7 +301,7 @@ const Chatbox: React.FC = () => {
           <button
             onClick={stopSpeaking}
             disabled={messages.length === 0}
-            className="ml-4"
+            className="ml-3"
             title="Stop AI speaking"
           >
             <span role="img" aria-label="Stop Sign">
@@ -312,7 +312,7 @@ const Chatbox: React.FC = () => {
           <button
             onClick={hideAiText}
             disabled={loading}
-            className="ml-4"
+            className="ml-3"
             title="Hide AI text"
           >
             <span role="img" aria-label="Reset Sign">
@@ -323,7 +323,7 @@ const Chatbox: React.FC = () => {
           <button
             onClick={resetSession}
             disabled={loading}
-            className="ml-4"
+            className="ml-3"
             title="Reset session"
           >
             <span role="img" aria-label="Reset Sign">
