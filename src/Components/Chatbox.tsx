@@ -133,7 +133,7 @@ const Chatbox: React.FC = () => {
     setSessionEnded(true);
     // Perform both actions concurrently using Promise.all
     Promise.all([
-      ratePerformance(historyKey),
+      ratePerformance(historyKey, selectedLanguage),
       rateLanguage(historyKey, selectedLanguage),
     ])
       .then(([performanceRes, languageRes]) => {
