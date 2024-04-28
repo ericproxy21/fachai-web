@@ -11,6 +11,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import useTextToSpeech from "../hooks/useTextToSpeech";
+import HelpScreen from "./HelpScreen";
 
 const Chatbox: React.FC = () => {
   const commands = [
@@ -39,6 +40,7 @@ const Chatbox: React.FC = () => {
   const [historyKey, setHistoryKey] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("german");
   const [recordingDebouncing, setRecordingDebouncing] = useState(false);
+  const [showHelpScreen, setShowHelpScreen] = useState(false);
   const { speakText, hasLangVoice, stopText, isSpeakingText } =
     useTextToSpeech(selectedLanguage);
   const historyRef = useRef<HTMLDivElement>(null);
@@ -56,6 +58,10 @@ const Chatbox: React.FC = () => {
     if (event.key === "Enter") {
       handleSendMessage();
     }
+  };
+
+  const toggleHelpScreen = () => {
+    setShowHelpScreen(!showHelpScreen);
   };
 
   const handleLanguageChange = (
@@ -237,6 +243,7 @@ const Chatbox: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
+      {showHelpScreen && <HelpScreen onClose={toggleHelpScreen} />}
       <div className="flex justify-end">
         <select
           id="language-select"
@@ -250,6 +257,11 @@ const Chatbox: React.FC = () => {
           <option value="french">FR</option>
           <option value="italian">IT</option>
         </select>
+        <button onClick={toggleHelpScreen} className="ml-5 mr-2">
+          <span role="img" aria-label="Reset Sign">
+            ?
+          </span>
+        </button>
       </div>
       <div
         ref={historyRef}
