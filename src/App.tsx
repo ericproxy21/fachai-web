@@ -29,7 +29,9 @@ function App() {
         </div> */}
         <div className="w-full flex justify-center">
           <div className="text-center">
-            <h1 className="text-2xl text-white">Fach.AI</h1>
+            <h1 className="text-2xl text-white font-bold">
+              Fach.<span className="text-2xl font-bold text-black">AI</span>
+            </h1>
             <p className="text-sm italic text-white">
               Arzt-Patienten-Gesprächsübungspraxis für die Fachsprachenprüfung
             </p>

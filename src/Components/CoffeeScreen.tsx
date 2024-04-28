@@ -9,7 +9,7 @@ function CoffeeScreen({ onClose }: HelpScreenProps) {
         <p className="text-black text-left">
           Good luck on your exam!! If this tool is useful, please consider
           buying me a coffee{" "}
-          <a className="text-blue-600" href="http://www.buymeacoffee.com">
+          <a className="text-blue-600" href="https://buymeacoffee.com/fachai">
             here
           </a>{" "}
           to support my work. Thank you!
