@@ -41,10 +41,11 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           API.
           <br />
           For <b>Android chrome</b>, you might need to update your Google
-          Text-to-Speech function. Go to{" "}
-          <b>Settings - Languages & Input - Text-to-Speech output</b>. Make sure
-          the corresponding TTS voice for your practice language is installed
-          there. You might need to restart your phone upon change.
+          Text-to-Speech language. Go to{" "}
+          <b>Settings - Languages & Input - Text-to-Speech output - Language</b>{" "}
+          to select the practice language. Make sure the TTS voice for your
+          practice language is installed in <b>Install Voice Data</b>. You might
+          need to restart your phone for the changes to take effect.
         </p>
         <button
           onClick={onClose}
