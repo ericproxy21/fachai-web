@@ -31,7 +31,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           <a className="text-blue-800" href="http://www.buymeacoffee.com">
             coffee
           </a>{" "}
-          to support me with my work. Appreciate it!!
+          to support me with my work.
           <br />
           <br />
           <b>System Requirements:</b>
@@ -40,13 +40,11 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           14.1 and Microsoft Edge and other browsers that support Web Speech
           API.
           <br />
-          For <b>Android chrome</b>, you might need to update your{" "}
-          <b>
-            Google Text-to-Speech function. Go to Settings - Languages & Input -
-            Text-to-Speech output
-          </b>
-          . Make sure the corresponding TTS voice for your practice language is
-          installed there. You might need to restart your phone upon change.
+          For <b>Android chrome</b>, you might need to update your Google
+          Text-to-Speech function. Go to{" "}
+          <b>Settings - Languages & Input - Text-to-Speech output</b>. Make sure
+          the corresponding TTS voice for your practice language is installed
+          there. You might need to restart your phone upon change.
         </p>
         <button
           onClick={onClose}
