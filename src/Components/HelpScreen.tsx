@@ -46,6 +46,10 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           to select the practice language. Make sure the TTS voice for your
           practice language is installed in <b>Install Voice Data</b>. You might
           need to restart your phone for the changes to take effect.
+          <br />
+          <br />
+          Please note that AI can make mistakes. Please be wary of the fact,
+          especially regarding medical information.
         </p>
         <button
           onClick={onClose}

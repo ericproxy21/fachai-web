@@ -124,12 +124,12 @@ const Chatbox: React.FC = () => {
     stopText();
   };
 
-  const startRecording = () => {
+  const startRecording = async () => {
     if (!recordingDebouncing) {
       setRecordingDebouncing(true);
       resetTranscript();
-      SpeechRecognition.stopListening();
-      SpeechRecognition.startListening({
+      SpeechRecognition.abortListening();
+      await SpeechRecognition.startListening({
         continuous: true,
         language: getListeningLanguage(),
       }); //{ language: 'zh-CN' }
@@ -156,14 +156,15 @@ const Chatbox: React.FC = () => {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (!stopRecordingDebouncing) {
       setStopRecordingDebouncing(true);
-      setTimeout(() => {
-        SpeechRecognition.stopListening();
-        fetchResponse(transcript);
-        resetTranscript();
-        setStopRecordingDebouncing(false);
+      setTimeout(async () => {
+        await SpeechRecognition.stopListening().then(() => {
+          fetchResponse(transcript);
+          resetTranscript();
+          setStopRecordingDebouncing(false);
+        });
       }, 800);
     }
   };
