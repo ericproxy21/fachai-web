@@ -13,7 +13,7 @@ const SpeedAdjuster: React.FC<SpeedAdjusterProps> = ({
 }) => {
   return (
     <div className="relative flex items-center">
-      <span className="mr-2 text-sm">Speed</span>
+      <span className="mr-1 text-sm">Speed</span>
       <button
         onClick={() => onSpeedChange(Math.max(speed - 0.2, 1.0))}
         className={`relative flex items-center justify-center z-10 ${

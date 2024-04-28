@@ -37,7 +37,8 @@ const Chatbox: React.FC = () => {
   const [disease, setDisease] = useState<string>("");
   const [isHideAiText, setIsHideAiText] = useState<boolean>(false);
   const [historyKey, setHistoryKey] = useState<string>("");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("German");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("german");
+  const [recordingDebouncing, setRecordingDebouncing] = useState(false);
   const { speakText, hasLangVoice, stopText, isSpeakingText } =
     useTextToSpeech(selectedLanguage);
   const historyRef = useRef<HTMLDivElement>(null);
@@ -69,11 +70,11 @@ const Chatbox: React.FC = () => {
     (msg: string) => {
       msg = msg.trim();
       if (msg.length > 0 && historyKey.length > 0) {
+        setLoading(true);
         setMessages((prevMessages) => [
           ...prevMessages,
           { role: ROLE.User, content: msg },
         ]);
-        setLoading(true);
 
         chat(msg, historyKey, selectedLanguage).then((res: string) => {
           if (res) {
@@ -109,14 +110,41 @@ const Chatbox: React.FC = () => {
   };
 
   const startRecording = () => {
-    resetTranscript();
-    SpeechRecognition.startListening(); //{ language: 'zh-CN' }
-    while (listening) {}
+    if (!recordingDebouncing) {
+      setRecordingDebouncing(true);
+      resetTranscript();
+      SpeechRecognition.stopListening();
+      SpeechRecognition.startListening({
+        continuous: true,
+        language: getListeningLanguage(),
+      }); //{ language: 'zh-CN' }
+      setTimeout(() => {
+        setRecordingDebouncing(false);
+      }, 1000);
+    }
+  };
+
+  const getListeningLanguage = (): string => {
+    switch (selectedLanguage.toLowerCase()) {
+      case "english":
+        return "en-US";
+      case "spanish":
+        return "es-ES";
+      case "german":
+        return "de-DE";
+      case "italian":
+        return "it-IT";
+      case "french":
+        return "fr-FR";
+      default:
+        return "de-DE";
+    }
   };
 
   const stopRecording = () => {
     SpeechRecognition.stopListening();
-    // fetchResponse(transcript);
+    fetchResponse(transcript);
+    resetTranscript();
   };
   const clearMessageHistory = () => {
     setMessages([]);
@@ -185,10 +213,10 @@ const Chatbox: React.FC = () => {
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
-    if (!listening && transcript !== "") {
-      fetchResponse(transcript);
-      resetTranscript();
-    }
+    // if (!listening && transcript !== "") {
+    //   fetchResponse(transcript);
+    //   resetTranscript();
+    // }
     setSpeaking(isSpeakingText);
   }, [
     messages,
@@ -216,11 +244,11 @@ const Chatbox: React.FC = () => {
           onChange={handleLanguageChange}
           className="text-black text-sm ml-auto p-1 mb-1"
         >
-          <option value="German">DE</option>
-          <option value="English">EN</option>
-          <option value="Spanish">ES</option>
-          <option value="French">FR</option>
-          <option value="Italian">IT</option>
+          <option value="german">DE</option>
+          <option value="english">EN</option>
+          <option value="spanish">ES</option>
+          <option value="french">FR</option>
+          <option value="italian">IT</option>
         </select>
       </div>
       <div
@@ -290,7 +318,7 @@ const Chatbox: React.FC = () => {
 
       <div className="flex items-center pt-2 justify-between">
         <div className="flex ml-0">
-          <div className="ml-3">
+          <div>
             <SpeedAdjuster
               speed={speed}
               onSpeedChange={handleSpeedChange}
@@ -366,7 +394,8 @@ const Chatbox: React.FC = () => {
                 !browserSupportsSpeechRecognition ||
                 !isMicrophoneAvailable ||
                 loading ||
-                speaking
+                speaking ||
+                recordingDebouncing
               }
             >
               <img
@@ -374,7 +403,8 @@ const Chatbox: React.FC = () => {
                   !browserSupportsSpeechRecognition ||
                   !isMicrophoneAvailable ||
                   loading ||
-                  speaking
+                  speaking ||
+                  recordingDebouncing
                     ? "grayscale"
                     : ""
                 }`}
