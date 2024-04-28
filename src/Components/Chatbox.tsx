@@ -170,10 +170,6 @@ const Chatbox: React.FC = () => {
     setup();
   };
 
-  const buyMeACoffee = () => {
-    window.open("https://www.buymeacoffee.com/fachai", "_blank");
-  };
-
   const getDiseaseResultString = (disease: string) => {
     switch (selectedLanguage) {
       case "english":
@@ -277,7 +273,7 @@ const Chatbox: React.FC = () => {
           id="language-select"
           value={selectedLanguage}
           onChange={handleLanguageChange}
-          className="text-black text-sm ml-auto p-1 mb-1"
+          className="text-black text-sm p-1 mb-1"
         >
           <option value="german">DE</option>
           <option value="english">EN</option>
@@ -292,7 +288,7 @@ const Chatbox: React.FC = () => {
         </button>
         <button onClick={toggleCoffeeScreen} className="ml-5 mr-2">
           <span role="img" aria-label="Reset Sign">
-            ☕
+            🍵
           </span>
         </button>
       </div>

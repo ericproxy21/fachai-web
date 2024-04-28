@@ -31,6 +31,7 @@ function App() {
           <h1 className="text-2xl text-white ">
             Arzt-Patienten-Gesprächsübung
           </h1>
+          <p className="text-sm italic">für fachsprachenprüfung</p>
         </div>
         <div className="flex-grow pt-8 h-96 w-full inline-block px-8">
           <Chatbox></Chatbox>

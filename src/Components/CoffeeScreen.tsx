@@ -12,7 +12,7 @@ function CoffeeScreen({ onClose }: HelpScreenProps) {
           <a className="text-blue-600" href="http://www.buymeacoffee.com">
             here
           </a>{" "}
-          to support my work. Appreciate it!
+          to support my work. Thank you!
         </p>
         <button
           onClick={onClose}
