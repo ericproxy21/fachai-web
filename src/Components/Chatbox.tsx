@@ -240,7 +240,10 @@ const Chatbox: React.FC = () => {
 
   useEffect(() => {
     // Effect for making the API call when component mount
-    setup(); // Call the fetchData function
+    setLoading(true);
+    setup().then(() => {
+      setLoading(false);
+    }); // Call the fetchData function
   }, []); // Empty dependency array ensures the effect runs only once
 
   // Scroll to the bottom of the chat history when messages change
