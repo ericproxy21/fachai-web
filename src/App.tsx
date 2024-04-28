@@ -24,14 +24,16 @@ function App() {
         This is a Tailwind CSS styled component.
       </div> */}
       <header className="App-header">
-        <div className="flex-row items-center justify-between pb-1">
+        {/* <div className="flex-row items-center justify-between pb-1">
           <img src={logo} alt="logo" className="App-logo mx-auto" />
-        </div>
-        <div className="w-full">
-          <h1 className="text-2xl text-white ">
-            Arzt-Patienten-Gesprächsübung
-          </h1>
-          <p className="text-sm italic">für fachsprachenprüfung</p>
+        </div> */}
+        <div className="w-full flex justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl text-white">Fach.AI</h1>
+            <p className="text-sm italic text-white">
+              Doctor-Patienten-Gesprächsübungspraxis für die Fachsprachenprüfung
+            </p>
+          </div>
         </div>
         <div className="flex-grow pt-8 h-96 w-full inline-block px-8">
           <Chatbox></Chatbox>
