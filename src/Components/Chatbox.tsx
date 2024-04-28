@@ -41,6 +41,7 @@ const Chatbox: React.FC = () => {
   const [historyKey, setHistoryKey] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("german");
   const [recordingDebouncing, setRecordingDebouncing] = useState(false);
+  const [stopRecordingDebouncing, setStopRecordingDebouncing] = useState(false);
   const [showHelpScreen, setShowHelpScreen] = useState(false);
   const [showCoffeeScreen, setShowCoffeeScreen] = useState(false);
   const { speakText, hasLangVoice, stopText, isSpeakingText } =
@@ -156,9 +157,15 @@ const Chatbox: React.FC = () => {
   };
 
   const stopRecording = () => {
-    SpeechRecognition.stopListening();
-    fetchResponse(transcript);
-    resetTranscript();
+    if (!stopRecordingDebouncing) {
+      setStopRecordingDebouncing(true);
+      setTimeout(() => {
+        SpeechRecognition.stopListening();
+        fetchResponse(transcript);
+        resetTranscript();
+        setStopRecordingDebouncing(false);
+      }, 800);
+    }
   };
   const clearMessageHistory = () => {
     setMessages([]);

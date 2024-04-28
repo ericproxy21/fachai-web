@@ -31,7 +31,7 @@ function App() {
           <div className="text-center">
             <h1 className="text-2xl text-white">Fach.AI</h1>
             <p className="text-sm italic text-white">
-              Doctor-Patienten-Gesprächsübungspraxis für die Fachsprachenprüfung
+              Arzt-Patienten-Gesprächsübungspraxis für die Fachsprachenprüfung
             </p>
           </div>
         </div>
