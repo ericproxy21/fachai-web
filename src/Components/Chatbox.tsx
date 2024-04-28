@@ -12,6 +12,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import useTextToSpeech from "../hooks/useTextToSpeech";
 import HelpScreen from "./HelpScreen";
+import CoffeeScreen from "./CoffeeScreen";
 
 const Chatbox: React.FC = () => {
   const commands = [
@@ -41,6 +42,7 @@ const Chatbox: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("german");
   const [recordingDebouncing, setRecordingDebouncing] = useState(false);
   const [showHelpScreen, setShowHelpScreen] = useState(false);
+  const [showCoffeeScreen, setShowCoffeeScreen] = useState(false);
   const { speakText, hasLangVoice, stopText, isSpeakingText } =
     useTextToSpeech(selectedLanguage);
   const historyRef = useRef<HTMLDivElement>(null);
@@ -61,7 +63,13 @@ const Chatbox: React.FC = () => {
   };
 
   const toggleHelpScreen = () => {
+    setShowCoffeeScreen(false);
     setShowHelpScreen(!showHelpScreen);
+  };
+
+  const toggleCoffeeScreen = () => {
+    setShowHelpScreen(false);
+    setShowCoffeeScreen(!showCoffeeScreen);
   };
 
   const handleLanguageChange = (
@@ -162,6 +170,27 @@ const Chatbox: React.FC = () => {
     setup();
   };
 
+  const buyMeACoffee = () => {
+    window.open("https://www.buymeacoffee.com/fachai", "_blank");
+  };
+
+  const getDiseaseResultString = (disease: string) => {
+    switch (selectedLanguage) {
+      case "english":
+        return `The disease of the patient is ${disease}.`;
+      case "spanish":
+        return `La enfermedad del paciente es ${disease}.`;
+      case "german":
+        return `Die Krankheit des Patienten ist ${disease}.`;
+      case "french":
+        return `La maladie du patient est ${disease}.`;
+      case "italian":
+        return `La malattia del paziente è ${disease}.`;
+      default:
+        return `Die Krankheit des Patienten ist ${disease}.`;
+    }
+  };
+
   const evaluateSession = () => {
     setLoading(true);
     setSessionEnded(true);
@@ -172,19 +201,17 @@ const Chatbox: React.FC = () => {
     ])
       .then(([performanceRes, languageRes]) => {
         // Update state after both actions are completed
+        const diseaseResultStr = getDiseaseResultString(disease);
         setMessages((prevMessages) => [
           ...prevMessages,
           {
             role: ROLE.Assistant,
-            content: `Die Krankheit des Patienten ist ${disease}.`,
+            content: diseaseResultStr,
           },
           { role: ROLE.Assistant, content: performanceRes },
           { role: ROLE.Assistant, content: languageRes },
         ]);
-        speakText(
-          `Die Krankheit des Patienten ist ${disease}. ${performanceRes} ${languageRes}`,
-          speed
-        );
+        speakText(diseaseResultStr, speed);
       })
       .catch((error) => {
         // Handle errors if needed
@@ -244,6 +271,7 @@ const Chatbox: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       {showHelpScreen && <HelpScreen onClose={toggleHelpScreen} />}
+      {showCoffeeScreen && <CoffeeScreen onClose={toggleCoffeeScreen} />}
       <div className="flex justify-end">
         <select
           id="language-select"
@@ -257,9 +285,14 @@ const Chatbox: React.FC = () => {
           <option value="french">FR</option>
           <option value="italian">IT</option>
         </select>
-        <button onClick={toggleHelpScreen} className="ml-5 mr-2">
+        <button onClick={toggleHelpScreen} className="ml-5">
           <span role="img" aria-label="Reset Sign">
             ?
+          </span>
+        </button>
+        <button onClick={toggleCoffeeScreen} className="ml-5 mr-2">
+          <span role="img" aria-label="Reset Sign">
+            ☕
           </span>
         </button>
       </div>

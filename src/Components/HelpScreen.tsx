@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface HelpScreenProps {
   onClose: () => void;
@@ -6,7 +6,7 @@ interface HelpScreenProps {
 
 function HelpScreen({ onClose }: HelpScreenProps) {
   return (
-    <div className="fixed top-1/4 left-1/4 w-1/2  flex items-left justify-center bg-gray-500 bg-opacity-50">
+    <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
         <p className="text-sm text-black text-left">
           <b>
@@ -27,6 +27,11 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           ⏸️: stop AI speaking <br />
           👁️: hide AI text <br />
           🔄: reset session with a new disease <br />
+          ☕: Buy me a{" "}
+          <a className="text-blue-800" href="http://www.buymeacoffee.com">
+            coffee
+          </a>{" "}
+          to support me with my work. Appreciate it!!
           <br />
           <br />
           <b>System Requirements:</b>
@@ -40,8 +45,8 @@ function HelpScreen({ onClose }: HelpScreenProps) {
             Google Text-to-Speech function. Go to Settings - Languages & Input -
             Text-to-Speech output
           </b>
-          . Make sure the corresponding TTS voice for your phone language is
-          installed. You might need to restart your phone upon change.
+          . Make sure the corresponding TTS voice for your practice language is
+          installed there. You might need to restart your phone upon change.
         </p>
         <button
           onClick={onClose}
