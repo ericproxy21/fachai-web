@@ -37,7 +37,7 @@ function App() {
             </p>
           </div>
         </div>
-        <div className="flex-grow pt-8 h-96 w-full inline-block px-8">
+        <div className="flex-grow pt-5 h-96 w-full inline-block px-8">
           <Chatbox></Chatbox>
         </div>
       </header>
