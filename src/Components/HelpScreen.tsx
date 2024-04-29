@@ -11,7 +11,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
         <p className="text-sm text-black text-left">
           <b>
             Welcome to fachAI! You will be talking to an AI patient with a
-            specific disease. Please try to diagnose him. Good luck!{" "}
+            specific disease. Please try to diagnose him/her. Good luck!{" "}
           </b>
           <br />
           1. You can either speak or type. Press the microphone button to start
@@ -41,16 +41,23 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           <br />
           <b>System Requirements:</b>
           <br />
-          <b>Google Chrome on desktop</b> for best results. Also support Safari
-          14.1 and Microsoft Edge and other browsers that support Web Speech
-          API.
+          Use <b>Google Chrome on desktop</b> for best results. Also support
+          Safari 14.1 and Microsoft Edge and other browsers that support Web
+          Speech API.
           <br />
-          For <b>Android chrome</b>, you might need to update your Google
-          Text-to-Speech language. Go to{" "}
-          <b>Settings - Languages & Input - Text-to-Speech output - Language</b>{" "}
+          For <b>Android Chrome</b>, to the right of the address bar, tap More
+          (triple dots) - Settings - Microphone or Camera to turn the camera on.
+          <br />
+          You might need to update your Google Text-to-Speech language. Go to{" "}
+          <b>
+            Settings - Languages & Input - Text-to-Speech output - Language
+          </b>{" "}
           to select the practice language. Make sure the TTS voice for your
           practice language is installed in <b>Install Voice Data</b>. You might
           need to restart your phone for the changes to take effect.
+          <br />
+          For <b>iOS Chrome</b>, check camera access is enabled in Settings -
+          Chrome - Microphone.
           <br />
           <br />
           Please note that AI can make mistakes. Please be wary of the fact,
