@@ -7,8 +7,8 @@ function CoffeeScreen({ onClose }: HelpScreenProps) {
     <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
         <p className="text-black text-left">
-          Good luck on your exam!! If this tool is useful, please consider
-          buying me a coffee{" "}
+          Good luck on your exam! If this tool is useful, please consider buying
+          me a coffee{" "}
           <a
             className="text-blue-600"
             href="https://buymeacoffee.com/fachai"
