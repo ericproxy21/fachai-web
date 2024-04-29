@@ -42,7 +42,7 @@ const Chatbox: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("german");
   const [recordingDebouncing, setRecordingDebouncing] = useState(false);
   const [stopRecordingDebouncing, setStopRecordingDebouncing] = useState(false);
-  const [showHelpScreen, setShowHelpScreen] = useState(true);
+  const [showHelpScreen, setShowHelpScreen] = useState(false);
   const [showCoffeeScreen, setShowCoffeeScreen] = useState(false);
   const { speakText, hasLangVoice, stopText, isSpeakingText } =
     useTextToSpeech(selectedLanguage);
@@ -276,7 +276,7 @@ const Chatbox: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
+    <div className="flex flex-col h-full">
       {showHelpScreen && <HelpScreen onClose={toggleHelpScreen} />}
       {showCoffeeScreen && <CoffeeScreen onClose={toggleCoffeeScreen} />}
       <div className="flex justify-end">
