@@ -118,6 +118,10 @@ function HelpScreen({ onClose }: HelpScreenProps) {
         >
           Close
         </button>
+        <p className="text-xs text-black mt-4">
+          Please note that AI can give wrong information. Please pay special
+          attention when regarding medical information.
+        </p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Chatbox from "./Components/Chatbox";
 import { helloWorld } from "./api/fachai";
+import ReactGA from "react-ga";
 
 function App() {
   useEffect(() => {
@@ -14,8 +15,11 @@ function App() {
         console.error("Error fetching data:", error);
       }
     };
-
+    const initGA = () => {
+      ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID ?? "");
+    };
     fetchData();
+    initGA();
   }, []);
 
   return (
