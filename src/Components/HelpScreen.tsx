@@ -28,7 +28,12 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           👁️: hide AI text <br />
           🔄: reset session with a new disease <br />
           ☕: Buy me a{" "}
-          <a className="text-blue-800" href="https://buymeacoffee.com/fachai">
+          <a
+            className="text-blue-800"
+            target="_blank"
+            href="https://buymeacoffee.com/fachai"
+            rel="noreferrer"
+          >
             coffee
           </a>{" "}
           to support me with my work.
