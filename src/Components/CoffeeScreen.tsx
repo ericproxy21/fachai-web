@@ -4,7 +4,7 @@ interface HelpScreenProps {
 
 function CoffeeScreen({ onClose }: HelpScreenProps) {
   return (
-    <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50 z-100">
+    <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50 z-100 ">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
         <button
           onClick={onClose}

@@ -276,7 +276,7 @@ const Chatbox: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-y-auto">
       {showHelpScreen && <HelpScreen onClose={toggleHelpScreen} />}
       {showCoffeeScreen && <CoffeeScreen onClose={toggleCoffeeScreen} />}
       <div className="flex justify-end">

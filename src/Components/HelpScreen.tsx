@@ -6,11 +6,11 @@ interface HelpScreenProps {
 
 function HelpScreen({ onClose }: HelpScreenProps) {
   return (
-    <div className="fixed ml-auto mr-auto w-4/5 flex items-left justify-center bg-gray-500 bg-opacity-50 z-50">
-      <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
+    <div className="ml-auto mr-auto w-4/5 flex items-left justify-between bg-gray-500 bg-opacity-50 z-50  ">
+      <div className="bg-blue-300 p-6 rounded-lg shadow-xl ">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 focus:outline-none"
+          className="top-2 right-2 justify-end text-gray-600 hover:text-gray-800 focus:outline-none"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           top right corner.
           <br />
           <br />
-          Speed 🔽/🔼: adjust AI speaking speed <br />
+          🔽/🔼: adjust AI speaking speed <br />
           ⏸️: stop AI speaking <br />
           👁️: hide AI text <br />
           🔄: reset session with a new disease <br />
