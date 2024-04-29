@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface HelpScreenProps {
   onClose: () => void;
 }
 
 function HelpScreen({ onClose }: HelpScreenProps) {
+  const [expandedAndroid, setExpandedAndroid] = useState(false);
+  const [expandediOS, setExpandediOS] = useState(false);
+  const toggleExpandAndroid = () => {
+    setExpandedAndroid(!expandedAndroid);
+    setExpandediOS(false);
+  };
+  const toggleExpandiOS = () => {
+    setExpandediOS(!expandediOS);
+    setExpandedAndroid(false);
+  };
   return (
     <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50 z-100 ">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
@@ -58,29 +68,49 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           to support me with my work.
           <br />
           <br />
-          <b>System Requirements:</b>
+          <b>
+            <span>System Requirements:</span>
+          </b>
           <br />
           Use <b>Google Chrome on desktop</b> for best results. Also support
-          Safari 14.1 and Microsoft Edge and other browsers that support Web
-          Speech API.
+          Safari 14.1 and Microsoft Edge.
           <br />
-          For <b>Android Chrome</b>, to the right of the address bar, tap More
-          (triple dots) - Settings - Microphone or Camera to turn the camera on.
+          <span
+            onClick={toggleExpandAndroid}
+            className="text-blue-800 underline"
+          >
+            Android
+          </span>
+          <span
+            onClick={toggleExpandiOS}
+            className="text-blue-800 underline ml-3"
+          >
+            iOS
+          </span>
           <br />
-          You might need to update your Google Text-to-Speech language. Go to{" "}
-          <b>
-            Settings - Languages & Input - Text-to-Speech output - Language
-          </b>{" "}
-          to select the practice language. Make sure the TTS voice for your
-          practice language is installed in <b>Install Voice Data</b>. You might
-          need to restart your phone for the changes to take effect.
+          {expandedAndroid && (
+            <span>
+              To the right of the address bar, tap More (triple dots) - Settings
+              - Microphone to turn the camera on.
+              <br />
+              You might need to update your Google Text-to-Speech language. Go
+              to{" "}
+              <b>
+                Settings - Languages & Input - Text-to-Speech output - Language
+              </b>{" "}
+              to select the practice language. Make sure the TTS voice for your
+              practice language is installed in <b>Install Voice Data</b>. You
+              might need to restart your phone for the changes to take effect.
+              <br />
+            </span>
+          )}
+          {expandediOS && (
+            <span>
+              Check camera access is enabled in{" "}
+              <b>Settings - Chrome - Microphone</b>.
+            </span>
+          )}
           <br />
-          For <b>iOS Chrome</b>, check camera access is enabled in Settings -
-          Chrome - Microphone.
-          <br />
-          <br />
-          Please note that AI can make mistakes. Please be wary of the fact,
-          especially regarding medical information.
         </p>
         <button
           onClick={onClose}
