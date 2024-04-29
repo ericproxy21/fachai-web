@@ -17,7 +17,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
   };
   return (
     <div className="fixed top-10 left-1/10 w-4/5  flex items-left justify-center bg-gray-500 bg-opacity-50 z-100 ">
-      <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
+      <div className="bg-blue-300 p-6 rounded-lg shadow-xl w-full">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 focus:outline-none"
