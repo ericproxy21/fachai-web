@@ -6,7 +6,7 @@ interface HelpScreenProps {
 
 function HelpScreen({ onClose }: HelpScreenProps) {
   return (
-    <div className="fixed ml-auto mr-auto w-4/5 flex items-left justify-center bg-gray-500 bg-opacity-50">
+    <div className="fixed ml-auto mr-auto w-4/5 flex items-left justify-center bg-gray-500 bg-opacity-50 z-50">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
         <button
           onClick={onClose}
