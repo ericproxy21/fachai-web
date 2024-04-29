@@ -6,7 +6,7 @@ interface HelpScreenProps {
 
 function HelpScreen({ onClose }: HelpScreenProps) {
   return (
-    <div className="fixed top-20 ml-auto mr-auto w-4/5 flex items-left justify-center bg-gray-500 bg-opacity-50">
+    <div className="fixed ml-auto mr-auto w-4/5 flex items-left justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-blue-300 p-6 rounded-lg shadow-xl">
         <p className="text-sm text-black text-left">
           <b>
@@ -23,7 +23,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           top right corner.
           <br />
           <br />
-          Speed 🔽/🔼: increase or decrease AI speaking speed <br />
+          Speed 🔽/🔼: adjust AI speaking speed <br />
           ⏸️: stop AI speaking <br />
           👁️: hide AI text <br />
           🔄: reset session with a new disease <br />
