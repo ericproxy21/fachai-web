@@ -65,7 +65,8 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           >
             coffee
           </a>{" "}
-          to support me with my work.
+          to support me with my work. <br />
+          Contact: fachai.contactme@gmail.com
           <br />
           <br />
           <b>
