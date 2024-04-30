@@ -40,7 +40,7 @@ function App() {
             </h1>
             <p className="text-sm italic text-white">
               Gespräch mit KI-Patienten für Arzt-Patienten-Gesprächsübungspraxis
-              für die Fachsprachenprüfung
+              (Fachsprachenprüfung)
             </p>
           </div>
         </div>
