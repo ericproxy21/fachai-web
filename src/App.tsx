@@ -39,7 +39,8 @@ function App() {
               Fach.<span className="text-2xl font-bold text-gray-500">AI</span>
             </h1>
             <p className="text-sm italic text-white">
-              Arzt-Patienten-Gesprächsübungspraxis für die Fachsprachenprüfung
+              Gespräch mit KI-Patienten für Arzt-Patienten-Gesprächsübungspraxis
+              für die Fachsprachenprüfung
             </p>
           </div>
         </div>
