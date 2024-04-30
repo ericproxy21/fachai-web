@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
-import logo from "./logo.svg";
+
 import "./App.css";
 import Chatbox from "./Components/Chatbox";
 import { helloWorld } from "./api/fachai";
 import ReactGA from "react-ga";
-
+import { useLocation } from "react-router-dom";
 function App() {
+  const location = useLocation();
+  ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID ?? "");
+  useEffect(() => {
+    ReactGA.pageview(location.pathname + location.search);
+  }, [location]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -15,11 +21,8 @@ function App() {
         console.error("Error fetching data:", error);
       }
     };
-    const initGA = () => {
-      ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID ?? "");
-    };
+
     fetchData();
-    initGA();
   }, []);
 
   return (
