@@ -78,7 +78,6 @@ const Chatbox: React.FC = () => {
   ) => {
     const lang = event.target.value;
     setSelectedLanguage(lang);
-    stopSpeaking();
     resetSession();
   };
 
@@ -175,6 +174,7 @@ const Chatbox: React.FC = () => {
 
   const resetSession = () => {
     clearMessageHistory();
+    stopSpeaking();
     setSessionEnded(false);
     setup();
   };
