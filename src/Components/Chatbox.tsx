@@ -78,6 +78,7 @@ const Chatbox: React.FC = () => {
   ) => {
     const lang = event.target.value;
     setSelectedLanguage(lang);
+    stopSpeaking();
     resetSession();
   };
 
