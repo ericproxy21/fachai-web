@@ -81,6 +81,27 @@ const Chatbox: React.FC = () => {
     resetSession();
   };
 
+  useEffect(() => {
+    const getOpeningMessage = (): string => {
+      switch (selectedLanguage) {
+        case "english":
+          return "Hello Doctor. I am not feeling well.";
+        case "german":
+          return "Hallo Doktor. Mir geht es nicht gut.";
+        case "italian":
+          return "Ciao Dottore. Non mi sento bene.";
+        case "french":
+          return "Bonjour Docteur. Je ne me sens pas bien.";
+        case "spanish":
+          return "Hola Doctor. No me siento bien.";
+        default:
+          return "Hallo Doktor. Mir geht es nicht gut.";
+      }
+    };
+
+    setMessages([{ role: ROLE.Assistant, content: getOpeningMessage() }]);
+  }, [selectedLanguage]);
+
   const fetchResponse = useCallback(
     (msg: string) => {
       msg = msg.trim();
@@ -196,23 +217,6 @@ const Chatbox: React.FC = () => {
     }
   };
 
-  const getOpeningMessage = (): string => {
-    switch (selectedLanguage) {
-      case "english":
-        return "Hello Doctor. I am not feeling well.";
-      case "german":
-        return "Hallo Doktor. Mir geht es nicht gut.";
-      case "italian":
-        return "Ciao Dottore. Non mi sento bene.";
-      case "french":
-        return "Bonjour Docteur. Je ne me sens pas bien.";
-      case "spanish":
-        return "Hola Doctor. No me siento bien.";
-      default:
-        return "Hallo Doktor. Mir geht es nicht gut.";
-    }
-  };
-
   const evaluateSession = () => {
     setLoading(true);
     setSessionEnded(true);
@@ -251,7 +255,6 @@ const Chatbox: React.FC = () => {
       const { disease, historyKey } = await response;
       setDisease(disease);
       setHistoryKey(historyKey);
-
       //console.log(`Disease is ${disease} and History Key is ${historyKey}`);
     } catch (error) {
       console.error("Error fetching data:", error);

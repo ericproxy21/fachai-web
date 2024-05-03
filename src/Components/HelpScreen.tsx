@@ -7,10 +7,12 @@ interface HelpScreenProps {
 function HelpScreen({ onClose }: HelpScreenProps) {
   const [expandedAndroid, setExpandedAndroid] = useState(true);
   const [expandediOS, setExpandediOS] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleExpandAndroid = () => {
     setExpandedAndroid(!expandedAndroid);
     setExpandediOS(false);
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleExpandiOS = () => {
     setExpandediOS(!expandediOS);
     setExpandedAndroid(false);
