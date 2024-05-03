@@ -5,8 +5,8 @@ interface HelpScreenProps {
 }
 
 function HelpScreen({ onClose }: HelpScreenProps) {
-  const [expandedAndroid, setExpandedAndroid] = useState(false);
-  const [expandediOS, setExpandediOS] = useState(false);
+  const [expandedAndroid, setExpandedAndroid] = useState(true);
+  const [expandediOS, setExpandediOS] = useState(true);
   const toggleExpandAndroid = () => {
     setExpandedAndroid(!expandedAndroid);
     setExpandediOS(false);
@@ -66,7 +66,15 @@ function HelpScreen({ onClose }: HelpScreenProps) {
             coffee
           </a>{" "}
           to support me with my work. <br />
-          Contact: fachai.contactme@gmail.com
+          Contact:{" "}
+          <a
+            className="text-blue-800"
+            target="_blank"
+            href="mailto:fachai.contactme@gmail.com"
+            rel="noreferrer"
+          >
+            fachai.contactme@gmail.com
+          </a>
           <br />
           <br />
           <b>
@@ -76,7 +84,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           Use <b>Google Chrome on desktop</b> for best results. Also support
           Safari 14.1 and Microsoft Edge.
           <br />
-          <span
+          {/* <span
             onClick={toggleExpandAndroid}
             className="text-blue-800 underline"
           >
@@ -87,10 +95,11 @@ function HelpScreen({ onClose }: HelpScreenProps) {
             className="text-blue-800 underline ml-3"
           >
             iOS
-          </span>
+          </span> */}
           <br />
           {expandedAndroid && (
             <span>
+              <b>Android </b>
               To the right of the address bar, tap More (triple dots) - Settings
               - Microphone to turn the camera on.
               <br />
@@ -107,7 +116,7 @@ function HelpScreen({ onClose }: HelpScreenProps) {
           )}
           {expandediOS && (
             <span>
-              Check camera access is enabled in{" "}
+              <b>iOS </b>Check camera access is enabled in{" "}
               <b>Settings - Chrome - Microphone</b>.
             </span>
           )}
