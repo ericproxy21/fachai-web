@@ -6,7 +6,7 @@ import { helloWorld } from "./api/fachai";
 import ReactGA from "react-ga";
 
 function App() {
-  ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID ?? "");
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID ?? "");
   useEffect(() => {
     ReactGA.pageview("home");
   }, []);
