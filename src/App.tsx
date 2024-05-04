@@ -4,9 +4,8 @@ import "./App.css";
 import Chatbox from "./Components/Chatbox";
 import { helloWorld } from "./api/fachai";
 import ReactGA from "react-ga";
-
+ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID ?? "");
 function App() {
-  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID ?? "");
   useEffect(() => {
     ReactGA.pageview("home");
   }, []);
