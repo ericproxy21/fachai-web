@@ -27,6 +27,8 @@ import {
 } from "react-share";
 
 const shareUrl = "https://fachai-web.onrender.com/";
+const shareTitle =
+  "Gespräch mit KI-Patienten für Arzt-Patienten-Gesprächsübungspraxis (Fachsprachenprüfung)";
 const Chatbox: React.FC = () => {
   const commands = [
     {
@@ -523,25 +525,26 @@ const Chatbox: React.FC = () => {
         )}
       </div>
       <div className="flex-row items-right pb-1">
-        <TelegramShareButton url={shareUrl}>
+        <TelegramShareButton url={shareUrl} title={shareTitle}>
           <TelegramIcon size={20} round={true} />
         </TelegramShareButton>
 
-        <LinkedinShareButton url={shareUrl}>
+        <LinkedinShareButton url={shareUrl} title={shareTitle}>
           <LinkedinIcon size={20} round={true} className="ml-3" />
         </LinkedinShareButton>
 
-        <WhatsappShareButton url={shareUrl}>
+        <WhatsappShareButton url={shareUrl} title={shareTitle}>
           <WhatsappIcon size={20} round={true} className="ml-3" />
         </WhatsappShareButton>
 
-        <TwitterShareButton url={shareUrl}>
+        <TwitterShareButton url={shareUrl} title={shareTitle}>
           <TwitterIcon size={20} round={true} className="ml-3" />
         </TwitterShareButton>
 
         <FacebookShareButton
           url={shareUrl}
           hashtag={"#fachsprachenprufung #fachai"}
+          title={shareTitle}
         >
           <FacebookIcon size={20} round={true} className="ml-3" />
         </FacebookShareButton>
