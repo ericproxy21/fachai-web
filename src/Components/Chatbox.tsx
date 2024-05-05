@@ -13,7 +13,20 @@ import SpeechRecognition, {
 import useTextToSpeech from "../hooks/useTextToSpeech";
 import HelpScreen from "./HelpScreen";
 import CoffeeScreen from "./CoffeeScreen";
+import {
+  FacebookShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  WhatsappIcon,
+  TelegramIcon,
+  LinkedinIcon,
+  TwitterIcon,
+} from "react-share";
 
+const shareUrl = "https://fachai-web.onrender.com/";
 const Chatbox: React.FC = () => {
   const commands = [
     {
@@ -508,6 +521,30 @@ const Chatbox: React.FC = () => {
         ) : (
           <></>
         )}
+      </div>
+      <div className="flex-row items-right pb-1">
+        <TelegramShareButton url={shareUrl}>
+          <TelegramIcon size={20} round={true} />
+        </TelegramShareButton>
+
+        <LinkedinShareButton url={shareUrl}>
+          <LinkedinIcon size={20} round={true} className="ml-3" />
+        </LinkedinShareButton>
+
+        <WhatsappShareButton url={shareUrl}>
+          <WhatsappIcon size={20} round={true} className="ml-3" />
+        </WhatsappShareButton>
+
+        <TwitterShareButton url={shareUrl}>
+          <TwitterIcon size={20} round={true} className="ml-3" />
+        </TwitterShareButton>
+
+        <FacebookShareButton
+          url={shareUrl}
+          hashtag={"#fachsprachenprufung #fachai"}
+        >
+          <FacebookIcon size={20} round={true} className="ml-3" />
+        </FacebookShareButton>
       </div>
       {showHelpScreen && <HelpScreen onClose={toggleHelpScreen} />}
       {showCoffeeScreen && <CoffeeScreen onClose={toggleCoffeeScreen} />}
