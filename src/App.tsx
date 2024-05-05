@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import "./App.css";
 import Chatbox from "./Components/Chatbox";
 import { helloWorld } from "./api/fachai";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID ?? "G-6T9K6B19XE");
 
 function App() {
-  useEffect(() => {
-    ReactGA.pageview("home");
-  }, []);
+  // useEffect(() => {
+  //   ReactGA.pageview("/");
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
